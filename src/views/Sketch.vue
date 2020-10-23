@@ -4,10 +4,13 @@
 
 <script>
 import P5 from 'p5';
+import '../util/rendering/extend';
 
 const sketch = (p5) => {
+  const canvasSize = 800;
+
   p5.setup = () => {
-    p5.createCanvas(400, 400);
+    p5.createSquareCanvas(canvasSize);
   };
 
   p5.draw = () => {
