@@ -58,16 +58,16 @@ const sketch = (p5) => {
 
   const startPoint = createPointInCircle(circle);
   const startTheta = p5.random(-Math.PI, Math.PI);
-  const ray = new Ray(startPoint, startTheta, p5);
+  let ray = new Ray(startPoint, startTheta, p5);
 
-  const intersection = solveRayCircleIntersection(ray, circle);
-  const normalLine = new Line(center, intersection, p5);
-  const tangentLine = new LineBySlope(intersection, normalLine.orthogonalSlope, tangentLength, p5);
+  let intersection = solveRayCircleIntersection(ray, circle);
+  let normalLine = new Line(center, intersection, p5);
+  let tangentLine = new LineBySlope(intersection, normalLine.orthogonalSlope, tangentLength, p5);
 
-  const reflectionLength = startPoint.distance(intersection);
-  const reflectionTheta = 2 * normalLine.theta - ray.theta + Math.PI;
-  const reflectionPoint = intersection.clone().translatePolar(reflectionLength, reflectionTheta);
-  const reflectionLine = new Line(intersection, reflectionPoint, p5);
+  let reflectionLength = startPoint.distance(intersection);
+  let reflectionTheta = 2 * normalLine.theta - ray.theta + Math.PI;
+  let reflectionPoint = intersection.clone().translatePolar(reflectionLength, reflectionTheta);
+  let reflectionLine = new Line(intersection, reflectionPoint, p5);
 
   p5.setup = () => {
     p5.createSquareCanvas(canvasSize);
@@ -87,6 +87,7 @@ const sketch = (p5) => {
     tangentLine.show({ stroke: 'blue' });
     reflectionPoint.show({ stroke: 'red', strokeWeight: 10 });
     reflectionLine.show({ stroke: 'red' });
+    ray.show();
 
     const distance = Math.sign(Math.cos(ray.theta)) * (intersection.x - ray.line.point2.x);
 
@@ -95,8 +96,18 @@ const sketch = (p5) => {
       // TODO: change radius increasing rate
       ray.radius = ray.framePassed;
       ray.line.point2 = ray.point.clone().translatePolar(ray.radius, ray.theta);
+    } else {
+      ray = new Ray(intersection, reflectionTheta, p5);
+      ray.frameStarted = p5.frameCount;
 
-      ray.show();
+      intersection = solveRayCircleIntersection(ray, circle);
+      normalLine = new Line(center, intersection, p5);
+      tangentLine = new LineBySlope(intersection, normalLine.orthogonalSlope, tangentLength, p5);
+
+      reflectionLength = startPoint.distance(intersection);
+      reflectionTheta = 2 * normalLine.theta - ray.theta + Math.PI;
+      reflectionPoint = intersection.clone().translatePolar(reflectionLength, reflectionTheta);
+      reflectionLine = new Line(intersection, reflectionPoint, p5);
     }
   };
 };
