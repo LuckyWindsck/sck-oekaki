@@ -8,10 +8,10 @@ class Point extends TwoDPrimitive {
     this.y = y;
   }
 
-  show(p5 = this.p5) {
-    super.show();
-
-    p5.point(this.x, this.y);
+  show(option) {
+    super.show(option, (p5) => {
+      p5.point(this.x, this.y);
+    });
   }
 }
 

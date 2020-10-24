@@ -11,10 +11,10 @@ class Line extends TwoDPrimitive {
     this.slope = (this.point2.y - this.point1.y) / (this.point2.x - this.point1.x);
   }
 
-  show(p5 = this.p5) {
-    super.show();
-
-    p5.line(this.point1.x, this.point1.y, this.point2.x, this.point2.y);
+  show(option) {
+    super.show(option, (p5) => {
+      p5.line(this.point1.x, this.point1.y, this.point2.x, this.point2.y);
+    });
   }
 }
 
