@@ -81,14 +81,18 @@ const sketch = (p5) => {
     center.show({ strokeWeight: 10 });
     intersection.show({ strokeWeight: 10 });
 
-    ray.framePassed = p5.frameCount - ray.frameStarted;
-    // TODO: change radius increasing rate
-    ray.radius = ray.framePassed;
+    const distance = Math.sign(Math.cos(ray.theta)) * (intersection.x - ray.line.point2.x);
 
-    const [x, y] = Coordinate.polar2cartesian(ray.framePassed, ray.theta);
-    ray.line.point2 = ray.point.clone().translate(x, y);
+    if (distance > 0) {
+      ray.framePassed = p5.frameCount - ray.frameStarted;
+      // TODO: change radius increasing rate
+      ray.radius = ray.framePassed;
 
-    ray.show();
+      const [x, y] = Coordinate.polar2cartesian(ray.framePassed, ray.theta);
+      ray.line.point2 = ray.point.clone().translate(x, y);
+
+      ray.show();
+    }
   };
 };
 
