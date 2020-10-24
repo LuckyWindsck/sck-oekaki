@@ -5,6 +5,7 @@
 <script>
 import P5 from 'p5';
 import Point from '../util/p5/shape/2d-primitives/point';
+import Ray from '../util/p5/shape/2d-primitives/ray';
 import Circle from '../util/p5/shape/2d-primitives/circle';
 import '../util/p5/rendering/extend';
 
@@ -24,17 +25,33 @@ const sketch = (p5) => {
   const circle = new Circle(center, radius, p5);
 
   const startPoint = createPointInCircle(circle);
+  const startTheta = p5.random(-Math.PI, Math.PI);
+  const ray = new Ray(startPoint, startTheta, p5);
 
   p5.setup = () => {
     p5.createSquareCanvas(canvasSize);
 
     p5.background('white');
     circle.show();
+
+    ray.frameStarted = p5.frameCount;
   };
 
   p5.draw = () => {
     startPoint.show({ strokeWeight: 10 });
     center.show({ strokeWeight: 10 });
+
+    ray.framePassed = p5.frameCount - ray.frameStarted;
+    // TODO: change radius increasing rate
+    ray.radius = ray.framePassed;
+
+    const [x, y] = [
+      ray.radius * Math.cos(ray.theta),
+      ray.radius * Math.sin(ray.theta),
+    ];
+    ray.line.point2 = new Point(ray.point.x + x, ray.point.y + y);
+
+    ray.show();
   };
 };
 
