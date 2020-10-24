@@ -19,7 +19,7 @@ const sketch = (p5) => {
   };
 
   const canvasSize = 800;
-  const center = new Point(canvasSize / 2, canvasSize / 2);
+  const center = new Point(canvasSize / 2, canvasSize / 2, p5);
   const radius = canvasSize * 0.4;
   const circle = new Circle(center, radius, p5);
 
@@ -34,6 +34,7 @@ const sketch = (p5) => {
 
   p5.draw = () => {
     startPoint.show({ strokeWeight: 10 });
+    center.show({ strokeWeight: 10 });
   };
 };
 
