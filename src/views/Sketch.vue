@@ -61,6 +61,8 @@ const sketch = (p5) => {
   const radius = canvasSize * 0.4;
   const circle = new Circle(center, radius, p5);
 
+  const fps = 60;
+
   const startPoint = createPointInCircle(circle);
   const startTheta = p5.random(-Math.PI, Math.PI);
   const ray = new Ray(startPoint, startTheta, p5);
@@ -69,6 +71,7 @@ const sketch = (p5) => {
 
   p5.setup = () => {
     p5.createSquareCanvas(canvasSize);
+    p5.frameRate(fps);
 
     p5.background('white');
     circle.show();
