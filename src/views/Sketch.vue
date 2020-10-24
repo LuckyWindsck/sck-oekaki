@@ -73,9 +73,7 @@ const sketch = (p5) => {
 
   const intersection = solveRayCircleIntersection(ray, circle);
   const normalLine = new Line(center, intersection, p5);
-
-  const tangentSlope = -1 / normalLine.slope;
-  const tangentLine = new LineBySlope(intersection, tangentSlope, tangentLength, p5);
+  const tangentLine = new LineBySlope(intersection, normalLine.orthogonalSlope, tangentLength, p5);
 
   p5.setup = () => {
     p5.createSquareCanvas(canvasSize);
