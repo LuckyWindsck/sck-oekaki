@@ -10,6 +10,7 @@ import LineBySlope from '../util/p5/shape/2d-primitives/line-by-slope';
 import Ray from '../util/p5/shape/2d-primitives/ray';
 import Circle from '../util/p5/shape/2d-primitives/circle';
 import '../util/p5/rendering/extend';
+import Quadratic from '../util/math/polynomial/quadratic';
 
 const sketch = (p5) => {
   const randomSign = () => (p5.random(0, 1) > 0.5 ? 1 : -1);
@@ -19,16 +20,6 @@ const sketch = (p5) => {
     const y = randomSign() * p5.random(0, Math.sqrt(circle.radius ** 2 - x ** 2));
 
     return new Point(x + circle.center.x, y + circle.center.y, p5);
-  };
-
-  const solveQuadratic = (a, b, c) => {
-    const discriminant = b ** 2 - 4 * a * c;
-    const [x1, x2] = [
-      (-b + Math.sqrt(discriminant)) / (2 * a),
-      (-b - Math.sqrt(discriminant)) / (2 * a),
-    ];
-
-    return [x1, x2];
   };
 
   const solveRayCircleIntersection = (ray, circle) => {
@@ -42,16 +33,15 @@ const sketch = (p5) => {
     // { (x - center.x) ** 2 + (y - center.y) ** 2 = radius ** 2
     // { y = slope * x + rayYIntercept
     // => a * (x ** 2) + b * x + c = 0
-    const [a, b, c] = [
+    const equation = new Quadratic(
       slope ** 2 + 1,
       2 * (slope * (yIntercept - center.y) - center.x),
       circleCenterNorm ** 2 - radius ** 2 - 2 * yIntercept * center.y + yIntercept ** 2,
-    ];
+    );
 
-    const [x1, x2] = solveQuadratic(a, b, c);
-
-    const x = Math.sign(Math.cos(theta)) > 0 ? Math.max(x1, x2) : Math.min(x1, x2);
-    const y = slope * x + yIntercept;
+    const [x1, x2] = equation.zeroes;
+    const x = (Math.sign(Math.cos(theta)) * Math.abs(x1 - x2) + (x1 + x2)) / 2;
+    const y = slope * (x - point.x) + point.y;
 
     const intersection = new Point(x, y, p5);
 
