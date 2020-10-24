@@ -31,6 +31,10 @@ class Point extends TwoDPrimitive {
     return this;
   }
 
+  distance(point) {
+    return Math.hypot(this.x - point.x, this.y - point.y);
+  }
+
   show(option) {
     super.show(option, (p5) => {
       p5.point(this.x, this.y);

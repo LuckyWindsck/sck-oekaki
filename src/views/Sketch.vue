@@ -75,6 +75,14 @@ const sketch = (p5) => {
   const normalLine = new Line(center, intersection, p5);
   const tangentLine = new LineBySlope(intersection, normalLine.orthogonalSlope, tangentLength, p5);
 
+  const reflectionTheta = 2 * normalLine.theta - ray.theta + Math.PI;
+  const reflectionSlope = Math.tan(reflectionTheta);
+  const reflectionLength = startPoint.distance(intersection);
+  const reflectionPoint = intersection.clone().translate(
+    ...Coordinate.polar2cartesian(reflectionLength, reflectionTheta),
+  );
+  const reflectionLine = new LineBySlope(intersection, reflectionSlope, reflectionLength, p5);
+
   p5.setup = () => {
     p5.createSquareCanvas(canvasSize);
     p5.frameRate(fps);
@@ -91,6 +99,8 @@ const sketch = (p5) => {
     intersection.show({ strokeWeight: 10 });
     normalLine.show();
     tangentLine.show({ stroke: 'blue' });
+    reflectionPoint.show({ stroke: 'red', strokeWeight: 10 });
+    reflectionLine.show({ stroke: 'red' });
 
     const distance = Math.sign(Math.cos(ray.theta)) * (intersection.x - ray.line.point2.x);
 
