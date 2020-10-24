@@ -54,7 +54,7 @@ const sketch = (p5) => {
 export default {
   name: 'Sketch',
   mounted() {
-    this.p5 = new P5(sketch, 'sketch');
+    this.sketch = new P5(sketch, 'sketch');
   },
 };
 </script>
