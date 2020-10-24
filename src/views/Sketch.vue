@@ -4,10 +4,10 @@
 
 <script>
 import P5 from 'p5';
-import Point from '../util/shape/2d-primitives/point';
-import Line from '../util/shape/2d-primitives/line';
-import Circle from '../util/shape/2d-primitives/circle';
-import '../util/rendering/extend';
+import Point from '../util/p5/shape/2d-primitives/point';
+import Line from '../util/p5/shape/2d-primitives/line';
+import Circle from '../util/p5/shape/2d-primitives/circle';
+import '../util/p5/rendering/extend';
 
 const sketch = (p5) => {
   const randomSign = () => (p5.random(0, 1) > 0.5 ? 1 : -1);
