@@ -8,6 +8,7 @@ import Point from '../util/p5/shape/2d-primitives/point';
 import Ray from '../util/p5/shape/2d-primitives/ray';
 import Circle from '../util/p5/shape/2d-primitives/circle';
 import '../util/p5/rendering/extend';
+import Coordinate from '../util/math/coordinate';
 
 const sketch = (p5) => {
   const randomSign = () => (p5.random(0, 1) > 0.5 ? 1 : -1);
@@ -45,10 +46,7 @@ const sketch = (p5) => {
     // TODO: change radius increasing rate
     ray.radius = ray.framePassed;
 
-    const [x, y] = [
-      ray.radius * Math.cos(ray.theta),
-      ray.radius * Math.sin(ray.theta),
-    ];
+    const [x, y] = Coordinate.polar2cartesian(ray.framePassed, ray.theta);
     ray.line.point2 = new Point(ray.point.x + x, ray.point.y + y);
 
     ray.show();
