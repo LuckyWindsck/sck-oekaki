@@ -58,9 +58,15 @@ const sketch = (p5) => {
     return intersection;
   };
 
-  const createLineThroughPointWithGivenSlope = (point, slope, delta = 100) => {
-    const auxiliaryPoint1 = point.clone().translate(delta, slope * delta);
-    const auxiliaryPoint2 = point.clone().translate(-delta, slope * -delta);
+  const createLineThroughPointWithGivenSlope = (point, slope, length = 100) => {
+    const auxiliaryPoint1 = point.clone().translate(
+      ...Coordinate.polar2cartesian(length, Math.atan(slope)),
+    );
+
+    const auxiliaryPoint2 = point.clone().translate(
+      ...Coordinate.polar2cartesian(length, Math.atan(slope) + Math.PI),
+    );
+
     const line = new Line(auxiliaryPoint1, auxiliaryPoint2, p5);
 
     return line;
