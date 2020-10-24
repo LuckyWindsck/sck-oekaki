@@ -2,7 +2,6 @@ import TwoDPrimitive from './2d-primitive';
 import Line from './line';
 
 class Ray extends TwoDPrimitive {
-  // theta: [-π, π]
   constructor(point, theta, p5) {
     super(p5);
 
