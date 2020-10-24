@@ -57,6 +57,14 @@ const sketch = (p5) => {
     return intersection;
   };
 
+  const createLineThroughPointWithGivenSlope = (point, slope, delta = 100) => {
+    const auxiliaryPoint1 = point.clone().translate(delta, slope * delta);
+    const auxiliaryPoint2 = point.clone().translate(-delta, slope * -delta);
+    const line = new Line(auxiliaryPoint1, auxiliaryPoint2, p5);
+
+    return line;
+  };
+
   const canvasSize = 800;
   const center = new Point(canvasSize / 2, canvasSize / 2, p5);
   const radius = canvasSize * 0.4;
@@ -70,6 +78,9 @@ const sketch = (p5) => {
 
   const intersection = solveRayCircleIntersection(ray, circle);
   const normalLine = new Line(center, intersection, p5);
+
+  const tangentSlope = -1 / normalLine.slope;
+  const tangentLine = createLineThroughPointWithGivenSlope(intersection, tangentSlope);
 
   p5.setup = () => {
     p5.createSquareCanvas(canvasSize);
@@ -86,6 +97,7 @@ const sketch = (p5) => {
     center.show({ strokeWeight: 10 });
     intersection.show({ strokeWeight: 10 });
     normalLine.show();
+    tangentLine.show({ stroke: 'blue' });
 
     const distance = Math.sign(Math.cos(ray.theta)) * (intersection.x - ray.line.point2.x);
 
