@@ -7,8 +7,9 @@ class Ray extends TwoDPrimitive {
 
     this.point = point;
     this.theta = theta;
-    this.radius = 0;
+    this.frameStarted = this.p5.frameCount;
 
+    this.radius = 0;
     this.line = new Line(this.point, this.point);
   }
 

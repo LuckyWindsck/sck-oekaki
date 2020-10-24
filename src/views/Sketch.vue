@@ -5,14 +5,14 @@
 <script>
 import P5 from 'p5';
 import Point from '../util/p5/shape/2d-primitives/point';
-import Line from '../util/p5/shape/2d-primitives/line';
-import LineBySlope from '../util/p5/shape/2d-primitives/line-by-slope';
-import Ray from '../util/p5/shape/2d-primitives/ray';
 import Circle from '../util/p5/shape/2d-primitives/circle';
 import '../util/p5/rendering/extend';
-import Quadratic from '../util/math/polynomial/quadratic';
+import RayReflectInCircle from '../util/sketch/ray-reflection/ray-reflection-in-circle';
 
 const sketch = (p5) => {
+  const canvasSize = 800;
+  const fps = 60;
+
   const randomSign = () => (p5.random(0, 1) > 0.5 ? 1 : -1);
 
   const createPointInCircle = (circle) => {
@@ -22,52 +22,13 @@ const sketch = (p5) => {
     return circle.center.clone().translate(x, y);
   };
 
-  const solveRayCircleIntersection = (ray, circle) => {
-    const { point, theta } = ray;
-    const { center, radius } = circle;
-
-    const slope = Math.tan(theta);
-    const yIntercept = point.y - slope * point.x;
-    const circleCenterNorm = Math.hypot(center.x, center.y);
-
-    // { (x - center.x) ** 2 + (y - center.y) ** 2 = radius ** 2
-    // { y = slope * x + rayYIntercept
-    // => a * (x ** 2) + b * x + c = 0
-    const equation = new Quadratic(
-      slope ** 2 + 1,
-      2 * (slope * (yIntercept - center.y) - center.x),
-      circleCenterNorm ** 2 - radius ** 2 - 2 * yIntercept * center.y + yIntercept ** 2,
-    );
-
-    const [x1, x2] = equation.zeroes;
-    const x = (Math.sign(Math.cos(theta)) * Math.abs(x1 - x2) + (x1 + x2)) / 2;
-    const y = slope * (x - point.x) + point.y;
-
-    const intersection = new Point(x, y, p5);
-
-    return intersection;
-  };
-
-  const canvasSize = 800;
   const center = new Point(canvasSize / 2, canvasSize / 2, p5);
   const radius = canvasSize * 0.4;
   const circle = new Circle(center, radius, p5);
 
-  const tangentLength = 100;
-  const fps = 60;
-
   const startPoint = createPointInCircle(circle);
   const startTheta = p5.random(-Math.PI, Math.PI);
-  let ray = new Ray(startPoint, startTheta, p5);
-
-  let intersection = solveRayCircleIntersection(ray, circle);
-  let normalLine = new Line(center, intersection, p5);
-  let tangentLine = new LineBySlope(intersection, normalLine.orthogonalSlope, tangentLength, p5);
-
-  let reflectionLength = startPoint.distance(intersection);
-  let reflectionTheta = 2 * normalLine.theta - ray.theta + Math.PI;
-  let reflectionPoint = intersection.clone().translatePolar(reflectionLength, reflectionTheta);
-  let reflectionLine = new Line(intersection, reflectionPoint, p5);
+  let rayReflection = new RayReflectInCircle(circle, startPoint, startTheta, p5);
 
   p5.setup = () => {
     p5.createSquareCanvas(canvasSize);
@@ -75,39 +36,17 @@ const sketch = (p5) => {
 
     p5.background('white');
     circle.show();
-
-    ray.frameStarted = p5.frameCount;
   };
 
   p5.draw = () => {
-    startPoint.show({ strokeWeight: 10 });
-    center.show({ strokeWeight: 10 });
-    intersection.show({ strokeWeight: 10 });
-    normalLine.show();
-    tangentLine.show({ stroke: 'blue' });
-    reflectionPoint.show({ stroke: 'red', strokeWeight: 10 });
-    reflectionLine.show({ stroke: 'red' });
-    ray.show();
+    rayReflection.showAuxiliary();
+    rayReflection.ray.show();
 
-    const distance = Math.sign(Math.cos(ray.theta)) * (intersection.x - ray.line.point2.x);
-
-    if (distance > 0) {
-      ray.framePassed = p5.frameCount - ray.frameStarted;
-      // TODO: change radius increasing rate
-      ray.radius = ray.framePassed;
-      ray.line.point2 = ray.point.clone().translatePolar(ray.radius, ray.theta);
+    if (!rayReflection.isIntersected) {
+      rayReflection.update();
     } else {
-      ray = new Ray(intersection, reflectionTheta, p5);
-      ray.frameStarted = p5.frameCount;
-
-      intersection = solveRayCircleIntersection(ray, circle);
-      normalLine = new Line(center, intersection, p5);
-      tangentLine = new LineBySlope(intersection, normalLine.orthogonalSlope, tangentLength, p5);
-
-      reflectionLength = startPoint.distance(intersection);
-      reflectionTheta = 2 * normalLine.theta - ray.theta + Math.PI;
-      reflectionPoint = intersection.clone().translatePolar(reflectionLength, reflectionTheta);
-      reflectionLine = new Line(intersection, reflectionPoint, p5);
+      const { intersection, reflection: { theta } } = rayReflection;
+      rayReflection = new RayReflectInCircle(circle, intersection, theta, p5);
     }
   };
 };

@@ -19,5 +19,11 @@ module.exports = {
         ignorePropertyModificationsFor: ['p5'],
       },
     ],
+    'no-underscore-dangle': ['error',
+      {
+        allowAfterThis: true,
+        enforceInMethodNames: false,
+      },
+    ],
   },
 };
