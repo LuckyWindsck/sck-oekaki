@@ -47,7 +47,7 @@ const sketch = (p5) => {
     ray.radius = ray.framePassed;
 
     const [x, y] = Coordinate.polar2cartesian(ray.framePassed, ray.theta);
-    ray.line.point2 = new Point(ray.point.x + x, ray.point.y + y);
+    ray.line.point2 = ray.point.clone().translate(x, y);
 
     ray.show();
   };
