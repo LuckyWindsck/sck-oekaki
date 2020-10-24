@@ -74,11 +74,10 @@ const sketch = (p5) => {
   const normalLine = new Line(center, intersection, p5);
   const tangentLine = new LineBySlope(intersection, normalLine.orthogonalSlope, tangentLength, p5);
 
-  const reflectionTheta = 2 * normalLine.theta - ray.theta + Math.PI;
-  const reflectionSlope = Math.tan(reflectionTheta);
   const reflectionLength = startPoint.distance(intersection);
+  const reflectionTheta = 2 * normalLine.theta - ray.theta + Math.PI;
   const reflectionPoint = intersection.clone().translatePolar(reflectionLength, reflectionTheta);
-  const reflectionLine = new LineBySlope(intersection, reflectionSlope, reflectionLength, p5);
+  const reflectionLine = new Line(intersection, reflectionPoint, p5);
 
   p5.setup = () => {
     p5.createSquareCanvas(canvasSize);
