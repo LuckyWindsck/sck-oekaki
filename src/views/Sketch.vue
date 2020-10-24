@@ -5,6 +5,7 @@
 <script>
 import P5 from 'p5';
 import Point from '../util/p5/shape/2d-primitives/point';
+import Line from '../util/p5/shape/2d-primitives/line';
 import Ray from '../util/p5/shape/2d-primitives/ray';
 import Circle from '../util/p5/shape/2d-primitives/circle';
 import '../util/p5/rendering/extend';
@@ -68,6 +69,7 @@ const sketch = (p5) => {
   const ray = new Ray(startPoint, startTheta, p5);
 
   const intersection = solveRayCircleIntersection(ray, circle);
+  const normalLine = new Line(center, intersection, p5);
 
   p5.setup = () => {
     p5.createSquareCanvas(canvasSize);
@@ -83,6 +85,7 @@ const sketch = (p5) => {
     startPoint.show({ strokeWeight: 10 });
     center.show({ strokeWeight: 10 });
     intersection.show({ strokeWeight: 10 });
+    normalLine.show();
 
     const distance = Math.sign(Math.cos(ray.theta)) * (intersection.x - ray.line.point2.x);
 
