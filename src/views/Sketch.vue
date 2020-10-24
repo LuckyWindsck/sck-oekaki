@@ -6,6 +6,7 @@
 import P5 from 'p5';
 import Point from '../util/p5/shape/2d-primitives/point';
 import Line from '../util/p5/shape/2d-primitives/line';
+import LineBySlope from '../util/p5/shape/2d-primitives/line-by-slope';
 import Ray from '../util/p5/shape/2d-primitives/ray';
 import Circle from '../util/p5/shape/2d-primitives/circle';
 import '../util/p5/rendering/extend';
@@ -58,25 +59,12 @@ const sketch = (p5) => {
     return intersection;
   };
 
-  const createLineThroughPointWithGivenSlope = (point, slope, length = 100) => {
-    const auxiliaryPoint1 = point.clone().translate(
-      ...Coordinate.polar2cartesian(length, Math.atan(slope)),
-    );
-
-    const auxiliaryPoint2 = point.clone().translate(
-      ...Coordinate.polar2cartesian(length, Math.atan(slope) + Math.PI),
-    );
-
-    const line = new Line(auxiliaryPoint1, auxiliaryPoint2, p5);
-
-    return line;
-  };
-
   const canvasSize = 800;
   const center = new Point(canvasSize / 2, canvasSize / 2, p5);
   const radius = canvasSize * 0.4;
   const circle = new Circle(center, radius, p5);
 
+  const tangentLength = 100;
   const fps = 60;
 
   const startPoint = createPointInCircle(circle);
@@ -87,7 +75,7 @@ const sketch = (p5) => {
   const normalLine = new Line(center, intersection, p5);
 
   const tangentSlope = -1 / normalLine.slope;
-  const tangentLine = createLineThroughPointWithGivenSlope(intersection, tangentSlope);
+  const tangentLine = new LineBySlope(intersection, tangentSlope, tangentLength, p5);
 
   p5.setup = () => {
     p5.createSquareCanvas(canvasSize);
