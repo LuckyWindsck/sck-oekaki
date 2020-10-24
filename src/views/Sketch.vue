@@ -20,6 +20,42 @@ const sketch = (p5) => {
     return new Point(x + circle.center.x, y + circle.center.y, p5);
   };
 
+  const solveQuadratic = (a, b, c) => {
+    const discriminant = b ** 2 - 4 * a * c;
+
+    return [
+      (-b + Math.sqrt(discriminant)) / (2 * a),
+      (-b - Math.sqrt(discriminant)) / (2 * a),
+    ];
+  };
+
+  const solveRayCircleIntersection = (ray, circle) => {
+    const { point, theta } = ray;
+    const { center, radius } = circle;
+
+    const slope = Math.tan(theta);
+    const yIntercept = point.y - slope * point.x;
+    const circleCenterNorm = Math.hypot(center.x, center.y);
+
+    // { (x - center.x) ** 2 + (y - center.y) ** 2 = radius ** 2
+    // { y = slope * x + rayYIntercept
+    // => a * (x ** 2) + b * x + c = 0
+    const [a, b, c] = [
+      slope ** 2 + 1,
+      2 * (slope * (yIntercept - center.y) - center.x),
+      circleCenterNorm ** 2 - radius ** 2 - 2 * yIntercept * center.y + yIntercept ** 2,
+    ];
+
+    const [x1, x2] = solveQuadratic(a, b, c);
+
+    const x = Math.sign(Math.cos(theta)) > 0 ? Math.max(x1, x2) : Math.min(x1, x2);
+    const y = slope * x + yIntercept;
+
+    const intersection = new Point(x, y, p5);
+
+    return intersection;
+  };
+
   const canvasSize = 800;
   const center = new Point(canvasSize / 2, canvasSize / 2, p5);
   const radius = canvasSize * 0.4;
@@ -28,6 +64,8 @@ const sketch = (p5) => {
   const startPoint = createPointInCircle(circle);
   const startTheta = p5.random(-Math.PI, Math.PI);
   const ray = new Ray(startPoint, startTheta, p5);
+
+  const intersection = solveRayCircleIntersection(ray, circle);
 
   p5.setup = () => {
     p5.createSquareCanvas(canvasSize);
@@ -41,6 +79,7 @@ const sketch = (p5) => {
   p5.draw = () => {
     startPoint.show({ strokeWeight: 10 });
     center.show({ strokeWeight: 10 });
+    intersection.show({ strokeWeight: 10 });
 
     ray.framePassed = p5.frameCount - ray.frameStarted;
     // TODO: change radius increasing rate
