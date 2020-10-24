@@ -10,7 +10,6 @@ import LineBySlope from '../util/p5/shape/2d-primitives/line-by-slope';
 import Ray from '../util/p5/shape/2d-primitives/ray';
 import Circle from '../util/p5/shape/2d-primitives/circle';
 import '../util/p5/rendering/extend';
-import Coordinate from '../util/math/coordinate';
 
 const sketch = (p5) => {
   const randomSign = () => (p5.random(0, 1) > 0.5 ? 1 : -1);
@@ -78,9 +77,7 @@ const sketch = (p5) => {
   const reflectionTheta = 2 * normalLine.theta - ray.theta + Math.PI;
   const reflectionSlope = Math.tan(reflectionTheta);
   const reflectionLength = startPoint.distance(intersection);
-  const reflectionPoint = intersection.clone().translate(
-    ...Coordinate.polar2cartesian(reflectionLength, reflectionTheta),
-  );
+  const reflectionPoint = intersection.clone().translatePolar(reflectionLength, reflectionTheta);
   const reflectionLine = new LineBySlope(intersection, reflectionSlope, reflectionLength, p5);
 
   p5.setup = () => {
@@ -108,9 +105,7 @@ const sketch = (p5) => {
       ray.framePassed = p5.frameCount - ray.frameStarted;
       // TODO: change radius increasing rate
       ray.radius = ray.framePassed;
-
-      const [x, y] = Coordinate.polar2cartesian(ray.framePassed, ray.theta);
-      ray.line.point2 = ray.point.clone().translate(x, y);
+      ray.line.point2 = ray.point.clone().translatePolar(ray.framePassed, ray.theta);
 
       ray.show();
     }

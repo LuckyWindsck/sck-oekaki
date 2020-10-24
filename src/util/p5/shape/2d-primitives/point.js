@@ -1,4 +1,5 @@
 import TwoDPrimitive from './2d-primitive';
+import Coordinate from '../../../math/coordinate';
 
 class Point extends TwoDPrimitive {
   constructor(x, y, p5) {
@@ -25,6 +26,15 @@ class Point extends TwoDPrimitive {
   }
 
   translate(x, y) {
+    this.translateX(x);
+    this.translateY(y);
+
+    return this;
+  }
+
+  translatePolar(radius, theta) {
+    const [x, y] = Coordinate.polar2cartesian(radius, theta);
+
     this.translateX(x);
     this.translateY(y);
 
