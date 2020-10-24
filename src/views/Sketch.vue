@@ -105,7 +105,7 @@ const sketch = (p5) => {
       ray.framePassed = p5.frameCount - ray.frameStarted;
       // TODO: change radius increasing rate
       ray.radius = ray.framePassed;
-      ray.line.point2 = ray.point.clone().translatePolar(ray.framePassed, ray.theta);
+      ray.line.point2 = ray.point.clone().translatePolar(ray.radius, ray.theta);
 
       ray.show();
     }
