@@ -23,11 +23,12 @@ const sketch = (p5) => {
 
   const solveQuadratic = (a, b, c) => {
     const discriminant = b ** 2 - 4 * a * c;
-
-    return [
+    const [x1, x2] = [
       (-b + Math.sqrt(discriminant)) / (2 * a),
       (-b - Math.sqrt(discriminant)) / (2 * a),
     ];
+
+    return [x1, x2];
   };
 
   const solveRayCircleIntersection = (ray, circle) => {
