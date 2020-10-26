@@ -2,22 +2,18 @@ import TwoDPrimitive from './2d-primitive';
 import Line from './line';
 
 class Ray extends TwoDPrimitive {
-  constructor(point, theta, p5) {
-    super(p5);
+  constructor(point, theta) {
+    super();
 
     this.point = point;
     this.theta = theta;
-    this.frameStarted = this.p5.frameCount;
 
     this.radius = 0;
     this.line = new Line(this.point, this.point);
   }
 
-  show(option) {
-    super.show(option, (p5) => {
-      if (!this.line.p5) this.line.p5 = p5;
-      this.line.show();
-    });
+  _show(p5) {
+    this.line.show({ p5 });
   }
 }
 

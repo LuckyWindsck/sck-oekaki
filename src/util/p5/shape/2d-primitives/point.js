@@ -2,8 +2,8 @@ import TwoDPrimitive from './2d-primitive';
 import Coordinate from '../../../math/coordinate';
 
 class Point extends TwoDPrimitive {
-  constructor(x, y, p5) {
-    super(p5);
+  constructor(x, y) {
+    super();
 
     this.x = x;
     this.y = y;
@@ -45,10 +45,8 @@ class Point extends TwoDPrimitive {
     return Math.hypot(this.x - point.x, this.y - point.y);
   }
 
-  show(option) {
-    super.show(option, (p5) => {
-      p5.point(this.x, this.y);
-    });
+  _show(p5) {
+    p5.point(this.x, this.y);
   }
 }
 

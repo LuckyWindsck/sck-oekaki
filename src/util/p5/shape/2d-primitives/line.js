@@ -1,9 +1,9 @@
 import TwoDPrimitive from './2d-primitive';
 
 class Line extends TwoDPrimitive {
-  constructor(point1, point2, p5) {
+  constructor(point1, point2) {
     // TODO: check whether conflict exists in p5 property of two points and the p5 parameter
-    super(p5);
+    super();
 
     this.point1 = point1;
     this.point2 = point2;
@@ -37,10 +37,8 @@ class Line extends TwoDPrimitive {
     return -1 / this.slope;
   }
 
-  show(option) {
-    super.show(option, (p5) => {
-      p5.line(this.point1.x, this.point1.y, this.point2.x, this.point2.y);
-    });
+  _show(p5) {
+    p5.line(this.point1.x, this.point1.y, this.point2.x, this.point2.y);
   }
 }
 

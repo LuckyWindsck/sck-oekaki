@@ -22,31 +22,31 @@ const sketch = (p5) => {
     return circle.center.clone().translate(x, y);
   };
 
-  const center = new Point(canvasSize / 2, canvasSize / 2, p5);
+  const center = new Point(canvasSize / 2, canvasSize / 2);
   const radius = canvasSize * 0.4;
-  const circle = new Circle(center, radius, p5);
+  const circle = new Circle(center, radius);
 
   const startPoint = createPointInCircle(circle);
   const startTheta = p5.random(-Math.PI, Math.PI);
-  let rayReflection = new RayReflectInCircle(circle, startPoint, startTheta, p5);
+  let rayReflection = new RayReflectInCircle(circle, startPoint, startTheta);
 
   p5.setup = () => {
     p5.createSquareCanvas(canvasSize);
     p5.frameRate(fps);
 
     p5.background('white');
-    circle.show();
+    circle.show({ p5 });
   };
 
   p5.draw = () => {
     if (rayReflection.isIntersected) {
       const { intersection, reflection: { theta } } = rayReflection;
-      rayReflection = new RayReflectInCircle(circle, intersection, theta, p5);
+      rayReflection = new RayReflectInCircle(circle, intersection, theta);
     }
 
-    rayReflection.showAuxiliary();
-    rayReflection.ray.show();
-    rayReflection.update();
+    rayReflection.showAuxiliary({ p5 });
+    rayReflection.ray.show({ p5 });
+    rayReflection.update({ p5 });
   };
 };
 

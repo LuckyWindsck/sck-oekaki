@@ -6,19 +6,18 @@ import Ray from '../../p5/shape/2d-primitives/ray';
 import Quadratic from '../../math/polynomial/quadratic';
 
 class RayReflectInCircle {
-  constructor(circle, point, theta, p5) {
+  constructor(circle, point, theta) {
     this.circle = circle;
     this.point = point;
     this.theta = theta;
-    this.p5 = p5;
 
     const tangentLength = 100;
 
-    this.ray = new Ray(point, theta, p5);
+    this.ray = new Ray(point, theta);
 
     this.intersection = this._intersection();
-    this.normal = new Line(circle.center, this.intersection, p5);
-    this.tangent = new LineBySlope(this.intersection, this.normal.orthogonalSlope, tangentLength, p5);
+    this.normal = new Line(circle.center, this.intersection);
+    this.tangent = new LineBySlope(this.intersection, this.normal.orthogonalSlope, tangentLength);
 
     this.reflection = {
       length: point.distance(this.intersection),
@@ -26,7 +25,7 @@ class RayReflectInCircle {
     };
 
     this.reflection.point = this.intersection.clone().translatePolar(this.reflection.length, this.reflection.theta);
-    this.reflection.line = new Line(this.intersection, this.reflection.point, p5);
+    this.reflection.line = new Line(this.intersection, this.reflection.point);
   }
 
   get distanceRemaining() {
@@ -58,23 +57,24 @@ class RayReflectInCircle {
     const x = (Math.sign(Math.cos(theta)) * Math.abs(x1 - x2) + (x1 + x2)) / 2;
     const y = slope * (x - point.x) + point.y;
 
-    const intersection = new Point(x, y, this.p5);
+    const intersection = new Point(x, y);
 
     return intersection;
   }
 
-  showAuxiliary() {
-    this.circle.center.show({ strokeWeight: 10 });
-    this.point.show({ strokeWeight: 10 });
-    this.intersection.show({ strokeWeight: 10 });
-    this.normal.show();
-    this.tangent.show({ stroke: 'blue' });
-    this.reflection.point.show({ stroke: 'red', strokeWeight: 10 });
-    this.reflection.line.show({ stroke: 'red' });
+  showAuxiliary({ p5 }) {
+    this.circle.center.show({ p5, strokeWeight: 10 });
+    this.point.show({ p5, strokeWeight: 10 });
+    this.intersection.show({ p5, strokeWeight: 10 });
+    this.normal.show({ p5 });
+    this.tangent.show({ p5, stroke: 'blue' });
+    this.reflection.point.show({ p5, stroke: 'red', strokeWeight: 10 });
+    this.reflection.line.show({ p5, stroke: 'red' });
   }
 
-  update() {
-    this.ray.framePassed = this.p5.frameCount - this.ray.frameStarted;
+  update({ p5 }) {
+    if (!this.ray.frameStarted) this.ray.frameStarted = p5.frameCount;
+    this.ray.framePassed = p5.frameCount - this.ray.frameStarted;
     // TODO: change radius increasing rate
     this.ray.radius = this.ray.framePassed;
     this.ray.line.point2 = this.ray.point.clone().translatePolar(this.ray.radius, this.ray.theta);
