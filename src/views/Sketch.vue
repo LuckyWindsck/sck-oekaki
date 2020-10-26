@@ -23,12 +23,13 @@ const sketch = (p5) => {
     return circle.center.clone().translate(x, y);
   };
 
-  const center = new Point({
-    x: canvasSize / 2,
-    y: canvasSize / 2,
+  const circle = new Circle({
+    center: new Point({
+      x: canvasSize / 2,
+      y: canvasSize / 2,
+    }),
+    radius: canvasSize * 0.4,
   });
-  const radius = canvasSize * 0.4;
-  const circle = new Circle({ center, radius });
 
   let rayReflection = new RayReflectInCircle({
     ray: new Ray({
