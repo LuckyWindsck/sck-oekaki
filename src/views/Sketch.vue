@@ -39,15 +39,14 @@ const sketch = (p5) => {
   };
 
   p5.draw = () => {
-    rayReflection.showAuxiliary();
-    rayReflection.ray.show();
-
-    if (!rayReflection.isIntersected) {
-      rayReflection.update();
-    } else {
+    if (rayReflection.isIntersected) {
       const { intersection, reflection: { theta } } = rayReflection;
       rayReflection = new RayReflectInCircle(circle, intersection, theta, p5);
     }
+
+    rayReflection.showAuxiliary();
+    rayReflection.ray.show();
+    rayReflection.update();
   };
 };
 
