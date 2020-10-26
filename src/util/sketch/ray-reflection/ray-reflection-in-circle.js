@@ -6,30 +6,40 @@ import Ray from '../../p5/shape/2d-primitives/ray';
 import Quadratic from '../../math/polynomial/quadratic';
 
 class RayReflectInCircle {
-  constructor(circle, point, theta) {
+  constructor({ circle, rayPoint, rayTheta }) {
     this.circle = circle;
-    this.point = point;
-    this.theta = theta;
+    this.ray = new Ray({
+      point: rayPoint,
+      theta: rayTheta,
+    });
 
     const tangentLength = 100;
 
-    this.ray = new Ray(point, theta);
-
     this.intersection = this._intersection();
-    this.normal = new Line(circle.center, this.intersection);
-    this.tangent = new LineBySlope(this.intersection, this.normal.orthogonalSlope, tangentLength);
+    this.normal = new Line({
+      startPoint: circle.center,
+      endPoint: this.intersection,
+    });
+    this.tangent = new LineBySlope({
+      point: this.intersection,
+      slope: this.normal.orthogonalSlope,
+      length: tangentLength,
+    });
 
     this.reflection = {
-      length: point.distance(this.intersection),
+      length: this.ray.line.startPoint.distance(this.intersection),
       theta: 2 * this.normal.theta - this.ray.theta + Math.PI,
     };
 
     this.reflection.point = this.intersection.clone().translatePolar(this.reflection.length, this.reflection.theta);
-    this.reflection.line = new Line(this.intersection, this.reflection.point);
+    this.reflection.line = new Line({
+      startPoint: this.intersection,
+      endPoint: this.reflection.point,
+    });
   }
 
   get distanceRemaining() {
-    return Math.sign(Math.cos(this.ray.theta)) * (this.intersection.x - this.ray.line.point2.x);
+    return Math.sign(Math.cos(this.ray.theta)) * (this.intersection.x - this.ray.line.endPoint.x);
   }
 
   get isIntersected() {
@@ -47,24 +57,24 @@ class RayReflectInCircle {
     // { (x - center.x) ** 2 + (y - center.y) ** 2 = radius ** 2
     // { y = slope * x + rayYIntercept
     // => a * (x ** 2) + b * x + c = 0
-    const equation = new Quadratic(
-      slope ** 2 + 1,
-      2 * (slope * (yIntercept - center.y) - center.x),
-      circleCenterNorm ** 2 - radius ** 2 - 2 * yIntercept * center.y + yIntercept ** 2,
-    );
+    const equation = new Quadratic({
+      a: slope ** 2 + 1,
+      b: 2 * (slope * (yIntercept - center.y) - center.x),
+      c: circleCenterNorm ** 2 - radius ** 2 - 2 * yIntercept * center.y + yIntercept ** 2,
+    });
 
     const [x1, x2] = equation.zeroes;
     const x = (Math.sign(Math.cos(theta)) * Math.abs(x1 - x2) + (x1 + x2)) / 2;
     const y = slope * (x - point.x) + point.y;
 
-    const intersection = new Point(x, y);
+    const intersection = new Point({ x, y });
 
     return intersection;
   }
 
   showAuxiliary({ p5 }) {
     this.circle.center.show({ p5, strokeWeight: 10 });
-    this.point.show({ p5, strokeWeight: 10 });
+    this.ray.line.startPoint.show({ p5, strokeWeight: 10 });
     this.intersection.show({ p5, strokeWeight: 10 });
     this.normal.show({ p5 });
     this.tangent.show({ p5, stroke: 'blue' });
@@ -77,7 +87,7 @@ class RayReflectInCircle {
     this.ray.framePassed = p5.frameCount - this.ray.frameStarted;
     // TODO: change radius increasing rate
     this.ray.radius = this.ray.framePassed;
-    this.ray.line.point2 = this.ray.point.clone().translatePolar(this.ray.radius, this.ray.theta);
+    this.ray.line.endPoint = this.ray.line.startPoint.clone().translatePolar(this.ray.radius, this.ray.theta);
   }
 }
 

@@ -1,20 +1,20 @@
 import TwoDPrimitive from './2d-primitive';
 
 class Line extends TwoDPrimitive {
-  constructor(point1, point2) {
+  constructor({ startPoint, endPoint }) {
     // TODO: check whether conflict exists in p5 property of two points and the p5 parameter
     super();
 
-    this.point1 = point1;
-    this.point2 = point2;
+    this.startPoint = startPoint;
+    this.endPoint = endPoint;
   }
 
   get deltaX() {
-    return this.point2.x - this.point1.x;
+    return this.endPoint.x - this.startPoint.x;
   }
 
   get deltaY() {
-    return this.point2.y - this.point1.y;
+    return this.endPoint.y - this.startPoint.y;
   }
 
   get slope() {
@@ -22,7 +22,7 @@ class Line extends TwoDPrimitive {
   }
 
   get yIntercept() {
-    return this.point1.y - this.slope * this.point1.x;
+    return this.startPoint.y - this.slope * this.startPoint.x;
   }
 
   get radius() {
@@ -38,7 +38,7 @@ class Line extends TwoDPrimitive {
   }
 
   _show(p5) {
-    p5.line(this.point1.x, this.point1.y, this.point2.x, this.point2.y);
+    p5.line(this.startPoint.x, this.startPoint.y, this.endPoint.x, this.endPoint.y);
   }
 }
 

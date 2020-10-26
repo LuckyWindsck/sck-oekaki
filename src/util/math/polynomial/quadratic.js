@@ -1,7 +1,7 @@
 import Polynomial from './polynomial';
 
 class Quadractic extends Polynomial {
-  constructor(a, b, c) {
+  constructor({ a = 0, b = 0, c = 0 } = {}) {
     super();
 
     this.a = a;

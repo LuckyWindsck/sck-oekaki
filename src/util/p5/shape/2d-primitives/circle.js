@@ -1,7 +1,7 @@
 import TwoDPrimitive from './2d-primitive';
 
 class Circle extends TwoDPrimitive {
-  constructor(center, radius) {
+  constructor({ center, radius }) {
     super();
 
     this.center = center;

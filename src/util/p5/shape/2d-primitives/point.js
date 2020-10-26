@@ -2,7 +2,7 @@ import TwoDPrimitive from './2d-primitive';
 import Coordinate from '../../../math/coordinate';
 
 class Point extends TwoDPrimitive {
-  constructor(x, y) {
+  constructor({ x, y }) {
     super();
 
     this.x = x;
@@ -10,7 +10,10 @@ class Point extends TwoDPrimitive {
   }
 
   clone() {
-    return new Point(this.x, this.y, this.p5);
+    return new Point({
+      x: this.x,
+      y: this.y,
+    });
   }
 
   translateX(x) {

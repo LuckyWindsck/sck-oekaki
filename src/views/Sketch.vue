@@ -22,13 +22,20 @@ const sketch = (p5) => {
     return circle.center.clone().translate(x, y);
   };
 
-  const center = new Point(canvasSize / 2, canvasSize / 2);
+  const center = new Point({
+    x: canvasSize / 2,
+    y: canvasSize / 2,
+  });
   const radius = canvasSize * 0.4;
-  const circle = new Circle(center, radius);
+  const circle = new Circle({ center, radius });
 
   const startPoint = createPointInCircle(circle);
   const startTheta = p5.random(-Math.PI, Math.PI);
-  let rayReflection = new RayReflectInCircle(circle, startPoint, startTheta);
+  let rayReflection = new RayReflectInCircle({
+    circle,
+    rayPoint: startPoint,
+    rayTheta: startTheta,
+  });
 
   p5.setup = () => {
     p5.createSquareCanvas(canvasSize);
@@ -41,7 +48,11 @@ const sketch = (p5) => {
   p5.draw = () => {
     if (rayReflection.isIntersected) {
       const { intersection, reflection: { theta } } = rayReflection;
-      rayReflection = new RayReflectInCircle(circle, intersection, theta);
+      rayReflection = new RayReflectInCircle({
+        circle,
+        rayPoint: intersection,
+        rayTheta: theta,
+      });
     }
 
     rayReflection.showAuxiliary({ p5 });
