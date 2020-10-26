@@ -2,16 +2,12 @@
 import Point from '../../p5/shape/2d-primitives/point';
 import Line from '../../p5/shape/2d-primitives/line';
 import LineBySlope from '../../p5/shape/2d-primitives/line-by-slope';
-import Ray from '../../p5/shape/2d-primitives/ray';
 import Quadratic from '../../math/polynomial/quadratic';
 
 class RayReflectInCircle {
-  constructor({ circle, rayPoint, rayTheta }) {
+  constructor({ ray, circle }) {
+    this.ray = ray;
     this.circle = circle;
-    this.ray = new Ray({
-      point: rayPoint,
-      theta: rayTheta,
-    });
 
     const tangentLength = 100;
 

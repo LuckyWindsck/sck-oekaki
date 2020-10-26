@@ -6,6 +6,7 @@
 import P5 from 'p5';
 import Point from '../util/p5/shape/2d-primitives/point';
 import Circle from '../util/p5/shape/2d-primitives/circle';
+import Ray from '../util/p5/shape/2d-primitives/ray';
 import '../util/p5/rendering/extend';
 import RayReflectInCircle from '../util/sketch/ray-reflection/ray-reflection-in-circle';
 
@@ -29,12 +30,12 @@ const sketch = (p5) => {
   const radius = canvasSize * 0.4;
   const circle = new Circle({ center, radius });
 
-  const startPoint = createPointInCircle(circle);
-  const startTheta = p5.random(-Math.PI, Math.PI);
   let rayReflection = new RayReflectInCircle({
+    ray: new Ray({
+      point: createPointInCircle(circle),
+      theta: p5.random(-Math.PI, Math.PI),
+    }),
     circle,
-    rayPoint: startPoint,
-    rayTheta: startTheta,
   });
 
   p5.setup = () => {
@@ -47,11 +48,12 @@ const sketch = (p5) => {
 
   p5.draw = () => {
     if (rayReflection.isIntersected) {
-      const { intersection, reflection: { theta } } = rayReflection;
       rayReflection = new RayReflectInCircle({
+        ray: new Ray({
+          point: rayReflection.intersection,
+          theta: rayReflection.reflection.theta,
+        }),
         circle,
-        rayPoint: intersection,
-        rayTheta: theta,
       });
     }
 
