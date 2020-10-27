@@ -81,7 +81,7 @@ class Line extends TwoDPrimitive {
   }
 
   get orthogonalSlope() {
-    return -1 / this.slope;
+    return Math.tan(this.#theta + Math.PI / 2);
   }
 
   _show(p5) {
