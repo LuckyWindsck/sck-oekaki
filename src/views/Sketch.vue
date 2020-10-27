@@ -28,19 +28,19 @@ export default {
     triggerEasterEgg() {
       this.isEasterEggTriggered = !this.isEasterEggTriggered;
     },
-    randomSign() {
-      return this.sketch.random(0, 1) > 0.5 ? 1 : -1;
+    randomSign({ p5 }) {
+      return p5.random(0, 1) > 0.5 ? 1 : -1;
     },
-    createPointInCircle(circle) {
-      const x = this.randomSign() * this.sketch.random(0, circle.radius);
-      const y = this.randomSign() * this.sketch.random(0, Math.sqrt(circle.radius ** 2 - x ** 2));
+    createPointInCircle({ p5, circle }) {
+      const x = this.randomSign({ p5 }) * p5.random(0, circle.radius);
+      const y = this.randomSign({ p5 }) * p5.random(0, Math.sqrt(circle.radius ** 2 - x ** 2));
 
       return circle.center.clone().translate({ x, y });
     },
     init(p5) {
       p5.setup = () => {
         p5.createSquareCanvas(this.canvasSize);
-        this.resetSketch();
+        this.resetSketch({ p5 });
       };
 
       p5.draw = () => {
@@ -57,9 +57,7 @@ export default {
         this.rayReflection.show({ p5 });
       };
     },
-    resetSketch() {
-      this.sketch.frameRate(this.fps);
-
+    resetSketch({ p5 }) {
       this.circle = new Circle({
         center: new Point({
           x: this.canvasSize / 2,
@@ -70,13 +68,15 @@ export default {
 
       this.rayReflection = new RayReflectInCircle({
         ray: new Ray({
-          point: this.createPointInCircle(this.circle),
-          theta: this.sketch.random(-Math.PI, Math.PI),
+          point: this.createPointInCircle({ p5, circle: this.circle }),
+          theta: p5.random(-Math.PI, Math.PI),
         }),
         circle: this.circle,
       });
-      this.sketch.background('white');
-      this.circle.show({ p5: this.sketch });
+
+      p5.frameRate(this.fps);
+      p5.background('white');
+      this.circle.show({ p5 });
     },
   },
   mounted() {
