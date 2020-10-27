@@ -2,7 +2,6 @@ import TwoDPrimitive from './2d-primitive';
 
 class Line extends TwoDPrimitive {
   constructor({ startPoint, endPoint }) {
-    // TODO: check whether conflict exists in p5 property of two points and the p5 parameter
     super();
 
     this.startPoint = startPoint;
