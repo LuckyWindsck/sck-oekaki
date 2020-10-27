@@ -24,7 +24,7 @@ class RayReflectInCircle {
     });
 
     this.reflection = {
-      length: this.ray.line.startPoint.distance(this.intersection),
+      length: this.ray.startPoint.distance(this.intersection),
       theta: 2 * this.normal.theta - this.ray.theta + Math.PI,
     };
 
@@ -40,7 +40,7 @@ class RayReflectInCircle {
   }
 
   get distanceRemaining() {
-    return Math.sign(Math.cos(this.ray.theta)) * (this.intersection.x - this.ray.line.endPoint.x);
+    return Math.sign(Math.cos(this.ray.theta)) * (this.intersection.x - this.ray.endPoint.x);
   }
 
   get isIntersected() {
@@ -48,11 +48,9 @@ class RayReflectInCircle {
   }
 
   _intersection() {
-    const { point, theta } = this.ray;
+    const { slope, theta, intercept } = this.ray;
     const { center, radius } = this.circle;
 
-    const slope = Math.tan(theta);
-    const yIntercept = point.y - slope * point.x;
     const circleCenterNorm = Math.hypot(center.x, center.y);
 
     // { (x - center.x) ** 2 + (y - center.y) ** 2 = radius ** 2
@@ -60,13 +58,13 @@ class RayReflectInCircle {
     // => a * (x ** 2) + b * x + c = 0
     const equation = new Quadratic({
       a: slope ** 2 + 1,
-      b: 2 * (slope * (yIntercept - center.y) - center.x),
-      c: circleCenterNorm ** 2 - radius ** 2 - 2 * yIntercept * center.y + yIntercept ** 2,
+      b: 2 * (slope * (intercept.y - center.y) - center.x),
+      c: circleCenterNorm ** 2 - radius ** 2 - 2 * intercept.y * center.y + intercept.y ** 2,
     });
 
     const [x1, x2] = equation.zeroes;
     const x = (Math.sign(Math.cos(theta)) * Math.abs(x1 - x2) + (x1 + x2)) / 2;
-    const y = slope * (x - point.x) + point.y;
+    const y = slope * x + intercept.y;
 
     const intersection = new Point({ x, y });
 
@@ -75,7 +73,7 @@ class RayReflectInCircle {
 
   showAuxiliary({ p5 }) {
     this.circle.center.show({ p5, strokeWeight: 10 });
-    this.ray.line.startPoint.show({ p5, strokeWeight: 10 });
+    this.ray.startPoint.show({ p5, strokeWeight: 10 });
     this.intersection.show({ p5, strokeWeight: 10 });
     this.normal.show({ p5 });
     this.tangent.show({ p5, stroke: 'blue' });
@@ -88,10 +86,6 @@ class RayReflectInCircle {
     this.ray.framePassed = p5.frameCount - this.ray.frameStarted;
     // TODO: change radius increasing rate
     this.ray.radius = this.ray.framePassed;
-    this.ray.line.endPoint = this.ray.line.startPoint.clone().translatePolar({
-      radius: this.ray.radius,
-      theta: this.ray.theta,
-    });
   }
 }
 

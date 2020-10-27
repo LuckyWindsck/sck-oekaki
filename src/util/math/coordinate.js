@@ -1,6 +1,6 @@
 const cartesian2polar = ({ x, y }) => ({
   radius: Math.hypot(x, y),
-  theta: Math.atan(y / x),
+  theta: Math.atan2(y, x),
 });
 
 const polar2cartesian = ({ radius, theta }) => ({

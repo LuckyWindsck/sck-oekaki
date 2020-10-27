@@ -1,35 +1,83 @@
 import TwoDPrimitive from './2d-primitive';
 
 class Line extends TwoDPrimitive {
+  #startPoint;
+
+  #endPoint;
+
+  #radius = 0;
+
+  #theta = 0;
+
   constructor({ startPoint, endPoint }) {
     super();
 
-    this.startPoint = startPoint;
-    this.endPoint = endPoint;
+    this.#startPoint = startPoint;
+    this.#endPoint = endPoint;
+    this.#radius = this.#endPoint.distance(this.#startPoint);
+    this.#theta = Math.atan2(this.delta.y, this.delta.x);
   }
 
-  get deltaX() {
-    return this.endPoint.x - this.startPoint.x;
+  get startPoint() {
+    return this.#startPoint;
   }
 
-  get deltaY() {
-    return this.endPoint.y - this.startPoint.y;
+  set startPoint(point) {
+    this.#startPoint = point;
+    this.#radius = this.endPoint.distance(point);
+    this.#theta = Math.atan2(this.delta.y, this.delta.x);
   }
 
-  get slope() {
-    return this.deltaY / this.deltaX;
+  get endPoint() {
+    return this.#endPoint;
   }
 
-  get yIntercept() {
-    return this.startPoint.y - this.slope * this.startPoint.x;
+  set endPoint(point) {
+    this.#endPoint = point;
+    this.#radius = this.startPoint.distance(point);
+    this.#theta = Math.atan2(this.delta.y, this.delta.x);
   }
 
   get radius() {
-    return Math.hypot(this.deltaX, this.deltaY);
+    return this.#radius;
+  }
+
+  set radius(radius) {
+    this.#radius = radius;
+    this.#endPoint = this.startPoint.clone().translatePolar({
+      radius,
+      theta: this.theta,
+    });
   }
 
   get theta() {
-    return Math.atan(this.slope) + Number(this.deltaX < 0) * Math.PI;
+    return this.#theta;
+  }
+
+  set theta(theta) {
+    this.#theta = theta;
+    this.#endPoint = this.startPoint.clone().translatePolar({
+      radius: this.radius,
+      theta,
+    });
+  }
+
+  get delta() {
+    return {
+      x: this.#endPoint.x - this.#startPoint.x,
+      y: this.#endPoint.y - this.#startPoint.y,
+    };
+  }
+
+  get slope() {
+    return Math.tan(this.#theta);
+  }
+
+  get intercept() {
+    return {
+      x: this.#startPoint.x - this.#startPoint.y / this.slope,
+      y: this.#startPoint.y - this.slope * this.#startPoint.x,
+    };
   }
 
   get orthogonalSlope() {
