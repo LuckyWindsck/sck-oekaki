@@ -1,5 +1,8 @@
 <template>
-  <div id="sketch"></div>
+  <div>
+    <button @click="resetSketch">Reset</button>
+    <div id="sketch" @dblclick="triggerEasterEgg"></div>
+  </div>
 </template>
 
 <script>
@@ -10,64 +13,76 @@ import Ray from '../util/p5/shape/2d-primitives/ray';
 import '../util/p5/rendering/extend';
 import RayReflectInCircle from '../util/sketch/ray-reflection/ray-reflection-in-circle';
 
-const sketch = (p5) => {
-  const canvasSize = 800;
-  const fps = 60;
-
-  const randomSign = () => (p5.random(0, 1) > 0.5 ? 1 : -1);
-
-  const createPointInCircle = (circle) => {
-    const x = randomSign() * p5.random(0, circle.radius);
-    const y = randomSign() * p5.random(0, Math.sqrt(circle.radius ** 2 - x ** 2));
-
-    return circle.center.clone().translate({ x, y });
-  };
-
-  const circle = new Circle({
-    center: new Point({
-      x: canvasSize / 2,
-      y: canvasSize / 2,
-    }),
-    radius: canvasSize * 0.4,
-  });
-
-  let rayReflection = new RayReflectInCircle({
-    ray: new Ray({
-      point: createPointInCircle(circle),
-      theta: p5.random(-Math.PI, Math.PI),
-    }),
-    circle,
-  });
-
-  p5.setup = () => {
-    p5.createSquareCanvas(canvasSize);
-    p5.frameRate(fps);
-
-    p5.background('white');
-    circle.show({ p5 });
-  };
-
-  p5.draw = () => {
-    if (rayReflection.isIntersected) {
-      rayReflection = new RayReflectInCircle({
-        ray: new Ray({
-          point: rayReflection.intersection,
-          theta: rayReflection.reflection.theta,
-        }),
-        circle,
-      });
-    }
-
-    rayReflection.showAuxiliary({ p5 });
-    rayReflection.ray.show({ p5 });
-    rayReflection.update({ p5 });
-  };
-};
-
 export default {
   name: 'Sketch',
+  data() {
+    return {
+      canvasSize: 800,
+      fps: 60,
+      circle: undefined,
+      rayReflection: undefined,
+      shouldShowEasterEgg: false,
+    };
+  },
+  methods: {
+    triggerEasterEgg() {
+      this.isEasterEggTriggered = !this.isEasterEggTriggered;
+    },
+    randomSign() {
+      return this.sketch.random(0, 1) > 0.5 ? 1 : -1;
+    },
+    createPointInCircle(circle) {
+      const x = this.randomSign() * this.sketch.random(0, circle.radius);
+      const y = this.randomSign() * this.sketch.random(0, Math.sqrt(circle.radius ** 2 - x ** 2));
+
+      return circle.center.clone().translate({ x, y });
+    },
+    init(p5) {
+      p5.setup = () => {
+        p5.createSquareCanvas(this.canvasSize);
+        this.resetSketch();
+      };
+
+      p5.draw = () => {
+        if (this.isEasterEggTriggered || this.rayReflection.isIntersected) {
+          this.rayReflection = new RayReflectInCircle({
+            ray: new Ray({
+              point: this.rayReflection.intersection,
+              theta: this.rayReflection.reflection.theta,
+            }),
+            circle: this.circle,
+          });
+        }
+
+        this.rayReflection.showAuxiliary({ p5 });
+        this.rayReflection.ray.show({ p5 });
+        this.rayReflection.update({ p5 });
+      };
+    },
+    resetSketch() {
+      this.sketch.frameRate(this.fps);
+
+      this.circle = new Circle({
+        center: new Point({
+          x: this.canvasSize / 2,
+          y: this.canvasSize / 2,
+        }),
+        radius: this.canvasSize * 0.4,
+      });
+
+      this.rayReflection = new RayReflectInCircle({
+        ray: new Ray({
+          point: this.createPointInCircle(this.circle),
+          theta: this.sketch.random(-Math.PI, Math.PI),
+        }),
+        circle: this.circle,
+      });
+      this.sketch.background('white');
+      this.circle.show({ p5: this.sketch });
+    },
+  },
   mounted() {
-    this.sketch = new P5(sketch, 'sketch');
+    this.sketch = new P5(this.init, 'sketch');
   },
 };
 </script>
