@@ -41,4 +41,16 @@ class Line extends TwoDPrimitive {
   }
 }
 
+Line.BySlope = ({
+  point,
+  slope,
+  length = 100,
+}) => {
+  const theta = Math.atan(slope);
+  const startPoint = point.clone().translatePolar({ radius: length, theta });
+  const endPoint = point.clone().translatePolar({ radius: length, theta: theta + Math.PI });
+
+  return new Line({ startPoint, endPoint });
+};
+
 export default Line;

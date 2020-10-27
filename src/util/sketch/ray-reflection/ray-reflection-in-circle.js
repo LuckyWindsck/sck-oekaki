@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
 import Point from '../../p5/shape/2d-primitives/point';
 import Line from '../../p5/shape/2d-primitives/line';
-import LineBySlope from '../../p5/shape/2d-primitives/line-by-slope';
 import Quadratic from '../../math/polynomial/quadratic';
 
 class RayReflectInCircle {
@@ -18,7 +17,7 @@ class RayReflectInCircle {
       endPoint: this.intersection,
     });
 
-    this.tangent = new LineBySlope({
+    this.tangent = new Line.BySlope({
       point: this.intersection,
       slope: this.normal.orthogonalSlope,
       length: tangentLength,
