@@ -38,4 +38,8 @@ class Point extends TwoDPrimitive {
   }
 }
 
+Point.Polar = ({ radius = 0, theta = 0 }) => (
+  new Point(Coordinate.polar2cartesian({ radius, theta }))
+);
+
 export default Point;
