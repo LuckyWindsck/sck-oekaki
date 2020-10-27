@@ -2,7 +2,7 @@ import TwoDPrimitive from './2d-primitive';
 import Coordinate from '../../../math/coordinate';
 
 class Point extends TwoDPrimitive {
-  constructor({ x, y }) {
+  constructor({ x = 0, y = 0 }) {
     super();
 
     this.x = x;
