@@ -29,7 +29,7 @@ class Point extends TwoDPrimitive {
     return this;
   }
 
-  distance(point) {
+  distanceFrom(point) {
     return Math.hypot(this.x - point.x, this.y - point.y);
   }
 

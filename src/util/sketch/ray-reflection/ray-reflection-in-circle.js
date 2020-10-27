@@ -24,7 +24,7 @@ class RayReflectInCircle {
     });
 
     this.reflection = {
-      length: this.ray.startPoint.distance(this.intersection),
+      length: this.ray.startPoint.distanceFrom(this.intersection),
       theta: 2 * this.normal.theta - this.ray.theta + Math.PI,
     };
 

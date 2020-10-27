@@ -14,7 +14,7 @@ class Line extends TwoDPrimitive {
 
     this.#startPoint = startPoint;
     this.#endPoint = endPoint;
-    this.#radius = this.#endPoint.distance(this.#startPoint);
+    this.#radius = this.#endPoint.distanceFrom(this.#startPoint);
     this.#theta = Math.atan2(this.delta.y, this.delta.x);
   }
 
@@ -24,7 +24,7 @@ class Line extends TwoDPrimitive {
 
   set startPoint(point) {
     this.#startPoint = point;
-    this.#radius = this.endPoint.distance(point);
+    this.#radius = this.endPoint.distanceFrom(point);
     this.#theta = Math.atan2(this.delta.y, this.delta.x);
   }
 
@@ -34,7 +34,7 @@ class Line extends TwoDPrimitive {
 
   set endPoint(point) {
     this.#endPoint = point;
-    this.#radius = this.startPoint.distance(point);
+    this.#radius = this.startPoint.distanceFrom(point);
     this.#theta = Math.atan2(this.delta.y, this.delta.x);
   }
 
