@@ -87,6 +87,12 @@ class RayReflectInCircle {
     // TODO: change radius increasing rate
     this.ray.radius = this.ray.framePassed;
   }
+
+  show({ p5 }) {
+    this.showAuxiliary({ p5 });
+    this.ray.show({ p5 });
+    this.update({ p5 });
+  }
 }
 
 export default RayReflectInCircle;

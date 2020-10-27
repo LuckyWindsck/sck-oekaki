@@ -54,9 +54,7 @@ export default {
           });
         }
 
-        this.rayReflection.showAuxiliary({ p5 });
-        this.rayReflection.ray.show({ p5 });
-        this.rayReflection.update({ p5 });
+        this.rayReflection.show({ p5 });
       };
     },
     resetSketch() {
