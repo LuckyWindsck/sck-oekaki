@@ -12,10 +12,12 @@ class RayReflectInCircle {
     const tangentLength = 100;
 
     this.intersection = this._intersection();
+
     this.normal = new Line({
       startPoint: circle.center,
       endPoint: this.intersection,
     });
+
     this.tangent = new LineBySlope({
       point: this.intersection,
       slope: this.normal.orthogonalSlope,
@@ -27,7 +29,11 @@ class RayReflectInCircle {
       theta: 2 * this.normal.theta - this.ray.theta + Math.PI,
     };
 
-    this.reflection.point = this.intersection.clone().translatePolar(this.reflection.length, this.reflection.theta);
+    this.reflection.point = this.intersection.clone().translatePolar({
+      radius: this.reflection.length,
+      theta: this.reflection.theta,
+    });
+
     this.reflection.line = new Line({
       startPoint: this.intersection,
       endPoint: this.reflection.point,
@@ -83,7 +89,10 @@ class RayReflectInCircle {
     this.ray.framePassed = p5.frameCount - this.ray.frameStarted;
     // TODO: change radius increasing rate
     this.ray.radius = this.ray.framePassed;
-    this.ray.line.endPoint = this.ray.line.startPoint.clone().translatePolar(this.ray.radius, this.ray.theta);
+    this.ray.line.endPoint = this.ray.line.startPoint.clone().translatePolar({
+      radius: this.ray.radius,
+      theta: this.ray.theta,
+    });
   }
 }
 

@@ -7,8 +7,8 @@ class LineBySlope extends Line {
     length = 100,
   }) {
     const theta = Math.atan(slope);
-    const startPoint = point.clone().translatePolar(length, theta);
-    const endPoint = point.clone().translatePolar(length, theta + Math.PI);
+    const startPoint = point.clone().translatePolar({ radius: length, theta });
+    const endPoint = point.clone().translatePolar({ radius: length, theta: theta + Math.PI });
 
     super({ startPoint, endPoint });
   }

@@ -20,7 +20,7 @@ const sketch = (p5) => {
     const x = randomSign() * p5.random(0, circle.radius);
     const y = randomSign() * p5.random(0, Math.sqrt(circle.radius ** 2 - x ** 2));
 
-    return circle.center.clone().translate(x, y);
+    return circle.center.clone().translate({ x, y });
   };
 
   const circle = new Circle({

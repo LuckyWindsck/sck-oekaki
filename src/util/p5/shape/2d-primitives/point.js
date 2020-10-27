@@ -16,30 +16,15 @@ class Point extends TwoDPrimitive {
     });
   }
 
-  translateX(x) {
+  translate({ x = 0, y = 0 } = {}) {
     this.x += x;
-
-    return this;
-  }
-
-  translateY(y) {
     this.y += y;
 
     return this;
   }
 
-  translate(x, y) {
-    this.translateX(x);
-    this.translateY(y);
-
-    return this;
-  }
-
-  translatePolar(radius, theta) {
-    const { x, y } = Coordinate.polar2cartesian({ radius, theta });
-
-    this.translateX(x);
-    this.translateY(y);
+  translatePolar({ radius, theta }) {
+    this.translate(Coordinate.polar2cartesian({ radius, theta }));
 
     return this;
   }
