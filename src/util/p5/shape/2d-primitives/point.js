@@ -36,7 +36,7 @@ class Point extends TwoDPrimitive {
   }
 
   translatePolar(radius, theta) {
-    const [x, y] = Coordinate.polar2cartesian(radius, theta);
+    const { x, y } = Coordinate.polar2cartesian({ radius, theta });
 
     this.translateX(x);
     this.translateY(y);
