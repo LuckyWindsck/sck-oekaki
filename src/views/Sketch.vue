@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="resetSketch">Reset</button>
+    <button @click="resetSketch({ p5: sketch })">Reset</button>
     <div id="sketch" @dblclick="triggerEasterEgg"></div>
   </div>
 </template>
