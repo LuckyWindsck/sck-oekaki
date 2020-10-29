@@ -1,6 +1,6 @@
 import Polynomial from './polynomial';
 
-class Quadractic extends Polynomial {
+class Quadratic extends Polynomial {
   constructor({ a = 0, b = 0, c = 0 } = {}) {
     super();
 
@@ -23,4 +23,4 @@ class Quadractic extends Polynomial {
   }
 }
 
-export default Quadractic;
+export default Quadratic;
