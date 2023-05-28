@@ -1,5 +1,7 @@
 # sck-oekaki
 
+My personal sketch book using p5.js
+
 ## Project setup
 ```
 yarn install
